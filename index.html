@@ -63,6 +63,24 @@
     </div>
 
     <script>
+        // 1. Verhindert das Heranzoomen der WEBSITE durch Multi-Touch (Pinch-to-Zoom)
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        // 2. Verhindert das Heranzoomen der WEBSITE durch Doppelklick/Doppeltippen
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // 3. Deine bestehende Iframe-Logik
         document.getElementById('qgisKarte').addEventListener('load', function() {
             try {
                 // Vorbereitung für spätere CSS-Injektion (aktuell inaktiv)
@@ -81,12 +99,13 @@
                 console.log("Karten-Design erfolgreich angepasst.");
                 */
                 
-                console.log("Karte regulär geladen.");
+                console.log("Karte regulär geladen. Website-Touch-Steuerung aktiv.");
             } catch (error) {
                 console.error("Fehler beim Laden der Karte:", error);
             }
         });
     </script>
+
 
 </body>
 </html>
