@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titel</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .header {
+            padding: 15px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+        .map-container {
+            width: 90%;
+            height: 75vh;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Headertitel</h1>
+        <p>Text</p>
+    </div>
+
+    <div class="map-container">
+        <iframe src="export/index.html"></iframe>
+    </div>
+
+</body>
+</html>
