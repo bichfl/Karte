@@ -80,35 +80,46 @@
             lastTouchEnd = now;
         }, false);
 
-        // 3. Iframe-Logik mit CSS-Injektion für die OpenLayers-Steuerelemente
+        // 3. Korrigierte Iframe-Logik mit präzisem CSS für qgis2web-IDs
         document.getElementById('qgisKarte').addEventListener('load', function() {
             try {
                 var iframeDoc = this.contentDocument || this.contentWindow.document;
                 
-                // CSS, um Bedienelemente an den unteren Rand zu verschieben
+                // CSS mit erhöhter Spezifität über IDs, um qgis2web-Standards zu überschreiben
                 var kartenStyles = `
-                    /* Layerauswahl (Layer Switcher) nach unten rechts */
-                    .layer-switcher {
+                    /* ---------------- LEFT SIDE CONTROLS (Gestapelt von unten nach oben) ---------------- */
+                    
+                    /* 1. Unterstes Element links: Die Lupe / Suchfunktion */
+                    div[id^="ol-search"], .ol-search, .search-layer, .geocoder {
                         top: auto !important;
                         bottom: 20px !important;
                     }
 
-                    /* Messwerkzeuge / Geolocation / Standard-Buttons nach unten links */
-                    .ol-control {
+                    /* 2. Darüber: Das Messwerkzeug (Lineal) */
+                    div[id^="measure-control"], .ol-control.measure-control {
                         top: auto !important;
-                        bottom: 20px !important;
+                        bottom: 65px !important;
                     }
 
-                    /* Suchfunktion nach unten setzen (leicht erhöht, um Überlagerung zu vermeiden) */
-                    .ol-search, .search-layer, .geocoder {
+                    /* 3. Darüber: Der Standort-Button (Geolocate) */
+                    div[id^="geolocate-control"], .ol-control.geolocate-control {
                         top: auto !important;
-                        bottom: 75px !important;
+                        bottom: 105px !important;
                     }
 
-                    /* Zoom-Tasten bei Bedarf ebenfalls nach unten verschieben (über die Suche) */
+                    /* 4. Ganz oben in der linken Reihe: Die Standard Zoom-Tasten (+/-) */
                     .ol-zoom {
                         top: auto !important;
-                        bottom: 130px !important;
+                        bottom: 145px !important;
+                    }
+
+
+                    /* ---------------- RIGHT SIDE CONTROLS ---------------- */
+
+                    /* Layerauswahl (Layer Switcher) sauber nach unten rechts schieben */
+                    div[id^="layer-switcher"], .layer-switcher, .ol-layer-switcher {
+                        top: auto !important;
+                        bottom: 50px !important; /* Etwas Platz über der QGIS-Attribution-Leiste lassen */
                     }
                 `;
                 
@@ -116,12 +127,13 @@
                 styleSheet.innerText = kartenStyles;
                 iframeDoc.head.appendChild(styleSheet);
                 
-                console.log("Karten-Design erfolgreich angepasst und Elemente nach unten verschoben.");
+                console.log("Karten-Elemente erfolgreich über IDs nach unten verschoben.");
             } catch (error) {
                 console.error("Fehler beim Laden oder Modifizieren der Karte:", error);
             }
         });
 </script>
+
 
 
 
