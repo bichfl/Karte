@@ -80,7 +80,7 @@
             lastTouchEnd = now;
         }, false);
 
-        // 3. Korrigierte Iframe-Logik: Erzwingt die Positionierung INNERHALB des Karten-Containers
+        // 3. Korrigierte Iframe-Logik: Verschiebt die linke Toolbar als kompakte Einheit
         document.getElementById('qgisKarte').addEventListener('load', function() {
             try {
                 var iframeDoc = this.contentDocument || this.contentWindow.document;
@@ -93,7 +93,7 @@
                         left: 0 !important;
                         width: 100% !important;
                         height: 100% !important;
-                        pointer-events: none !important; /* Verhindert, dass unsichtbare Boxen Klicks blockieren */
+                        pointer-events: none !important;
                     }
 
                     /* Macht Klicks auf die tatsächlichen Buttons wieder möglich */
@@ -102,49 +102,44 @@
                         pointer-events: auto !important;
                     }
 
-                    /* ---------------- LINKE SEITE (Gestapelt von unten nach oben) ---------------- */
+                    /* ---------------- LINKE SEITE (Kompakt als Einheit nach unten) ---------------- */
                     
-                    /* Lupe / Suchfunktion ganz unten links */
+                    /* 1. Verschiebt alle Standard-Buttons (Zoom, Geolocate, Measure) gemeinsam.
+                       Das belässt die Icons in ihren Boxen und bewahrt die Abstände! */
+                    .ol-zoom, .geolocate-control, .measure-control, div[id^="geolocate"], div[id^="measure"] {
+                        position: absolute !important;
+                        top: auto !important;
+                        left: 12px !important;
+                    }
+
+                    /* Positionierung der einzelnen Elemente innerhalb der Standard-Optik */
+                    .ol-zoom { bottom: 155px !important; }
+                    .geolocate-control, div[id^="geolocate"] { bottom: 115px !important; }
+                    .measure-control, div[id^="measure"] { bottom: 75px !important; }
+
+                    /* 2. Die Lupe / Suchfunktion (wird passend unter der Toolbar platziert) */
                     .ol-search, .search-layer, .geocoder, div[id^="ol-search"] {
                         position: absolute !important;
                         top: auto !important;
-                        left: 10px !important;
-                        bottom: 15px !important;
+                        left: 12px !important;
+                        bottom: 20px !important;
+                        margin: 0 !important;
                     }
 
-                    /* Messwerkzeug (Lineal) direkt darüber */
-                    .measure-control, div[id^="measure-control"] {
-                        position: absolute !important;
-                        top: auto !important;
-                        left: 10px !important;
-                        bottom: 60px !important;
-                    }
-
-                    /* Standort-Button (Geolocate) darüber */
-                    .geolocate-control, div[id^="geolocate-control"] {
-                        position: absolute !important;
-                        top: auto !important;
-                        left: 10px !important;
-                        bottom: 100px !important;
-                    }
-
-                    /* Standard Zoom-Tasten (+/-) ganz oben in der linken Reihe */
-                    .ol-zoom {
-                        position: absolute !important;
-                        top: auto !important;
-                        left: 10px !important;
-                        bottom: 140px !important;
+                    /* Verhindert, dass qgis2web-Zusatzstyles das Layout links zerreißen */
+                    .ol-control button {
+                        display: block !important;
+                        margin: 1px auto !important;
                     }
 
 
-                    /* ---------------- RECHTE SEITE ---------------- */
+                    /* ---------------- RECHTE SEITE (Unverändert, da passend) ---------------- */
 
-                    /* Layerauswahl (Layer Switcher) exakt unten rechts platzieren */
                     .layer-switcher, .ol-layer-switcher, div[id^="layer-switcher"] {
                         position: absolute !important;
                         top: auto !important;
-                        right: 10px !important;
-                        bottom: 45px !important; /* Hält Abstand zur QGIS-Urheberrechtsleiste ganz unten rechts */
+                        right: 12px !important;
+                        bottom: 45px !important;
                     }
                 `;
                 
@@ -152,9 +147,9 @@
                 styleSheet.innerText = kartenStyles;
                 iframeDoc.head.appendChild(styleSheet);
                 
-                console.log("Karten-Design erfolgreich korrigiert. Elemente verbleiben im Iframe-Sichtfeld.");
+                console.log("Karten-Design links erfolgreich kompaktiert und Icons wiederhergestellt.");
             } catch (error) {
-                console.error("Fehler beim Modifizieren des Karten-Iframes:", error);
+                console.error("Fehler beim Anpassen der linken Toolbar:", error);
             }
         });
 </script>
