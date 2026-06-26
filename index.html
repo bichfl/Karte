@@ -62,7 +62,7 @@
         <iframe id="qgisKarte" src="export/index.html"></iframe>
     </div>
 
-    <script>
+<script>
         // 1. Verhindert das Heranzoomen der WEBSITE durch Multi-Touch (Pinch-to-Zoom)
         document.addEventListener('touchstart', function(event) {
             if (event.touches.length > 1) {
@@ -80,31 +80,49 @@
             lastTouchEnd = now;
         }, false);
 
-        // 3. Deine bestehende Iframe-Logik
+        // 3. Iframe-Logik mit CSS-Injektion für die OpenLayers-Steuerelemente
         document.getElementById('qgisKarte').addEventListener('load', function() {
             try {
-                // Vorbereitung für spätere CSS-Injektion (aktuell inaktiv)
-                /*
                 var iframeDoc = this.contentDocument || this.contentWindow.document;
                 
-                // Hier dein eigenes CSS für die Karte einfügen:
+                // CSS, um Bedienelemente an den unteren Rand zu verschieben
                 var kartenStyles = `
-                    
+                    /* Layerauswahl (Layer Switcher) nach unten rechts */
+                    .layer-switcher {
+                        top: auto !important;
+                        bottom: 20px !important;
+                    }
+
+                    /* Messwerkzeuge / Geolocation / Standard-Buttons nach unten links */
+                    .ol-control {
+                        top: auto !important;
+                        bottom: 20px !important;
+                    }
+
+                    /* Suchfunktion nach unten setzen (leicht erhöht, um Überlagerung zu vermeiden) */
+                    .ol-search, .search-layer, .geocoder {
+                        top: auto !important;
+                        bottom: 75px !important;
+                    }
+
+                    /* Zoom-Tasten bei Bedarf ebenfalls nach unten verschieben (über die Suche) */
+                    .ol-zoom {
+                        top: auto !important;
+                        bottom: 130px !important;
+                    }
                 `;
                 
                 var styleSheet = iframeDoc.createElement("style");
                 styleSheet.innerText = kartenStyles;
                 iframeDoc.head.appendChild(styleSheet);
                 
-                console.log("Karten-Design erfolgreich angepasst.");
-                */
-                
-                console.log("Karte regulär geladen. Website-Touch-Steuerung aktiv.");
+                console.log("Karten-Design erfolgreich angepasst und Elemente nach unten verschoben.");
             } catch (error) {
-                console.error("Fehler beim Laden der Karte:", error);
+                console.error("Fehler beim Laden oder Modifizieren der Karte:", error);
             }
         });
-    </script>
+</script>
+
 
 
 </body>
